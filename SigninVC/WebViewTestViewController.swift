@@ -14,7 +14,7 @@ class WebViewTestViewController: UIViewController, UIWebViewDelegate {
 
   @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
-  var urlToLoad: NSURL? = nil;
+  var urlToLoad: URL? = nil;
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -30,19 +30,19 @@ class WebViewTestViewController: UIViewController, UIWebViewDelegate {
   }
 
 
-  func loadURL(urlToLoad: NSURL)
+  func loadURL(_ urlToLoad: URL)
   {
-    webView.loadRequest(NSURLRequest(URL: urlToLoad))
+    webView.loadRequest(URLRequest(url: urlToLoad))
   }
 
-  func webViewDidFinishLoad(webView: UIWebView)
+  func webViewDidFinishLoad(_ webView: UIWebView)
   {
     activityIndicator.stopAnimating()
   }
 
-  @IBAction func onDone(sender: AnyObject)
+  @IBAction func onDone(_ sender: AnyObject)
   {
-    self.presentingViewController!.dismissViewControllerAnimated(true, completion:nil)
+    self.presentingViewController!.dismiss(animated: true, completion:nil)
   }
 
 }

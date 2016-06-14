@@ -11,7 +11,7 @@ import WebKit
 class WebViewWKViewController: UIViewController, WKNavigationDelegate {
 
   var webView: WKWebView!
-  var urlToLoad: NSURL? = nil;
+  var urlToLoad: URL? = nil;
 
   @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
@@ -21,9 +21,9 @@ class WebViewWKViewController: UIViewController, WKNavigationDelegate {
     webView = WKWebView()
     webView.navigationDelegate = self
 
-    self.view.insertSubview(webView, atIndex: 0)
+    self.view.insertSubview(webView, at: 0)
     webView.frame = self.view.frame
-    webView.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y+50, self.view.frame.size.width, self.view.frame.size.height)
+    webView.frame = CGRect(x: self.view.frame.origin.x, y: self.view.frame.origin.y+50, width: self.view.frame.size.width, height: self.view.frame.size.height)
 
     if (urlToLoad != nil)
     {
@@ -36,23 +36,23 @@ class WebViewWKViewController: UIViewController, WKNavigationDelegate {
     // Dispose of any resources that can be recreated.
   }
 
-  func loadURL(_urlToLoad: NSURL)
+  func loadURL(_ _urlToLoad: URL)
   {
     urlToLoad = _urlToLoad
     if (webView != nil)
     {
-      webView.loadRequest(NSURLRequest(URL: urlToLoad!))
+      webView.load(URLRequest(url: urlToLoad!))
     }
   }
 
-  func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!)
+  func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!)
   {
     activityIndicator.stopAnimating()
   }
 
-  @IBAction func onDone(sender: AnyObject)
+  @IBAction func onDone(_ sender: AnyObject)
   {
-    self.presentingViewController!.dismissViewControllerAnimated(true, completion:nil)
+    self.presentingViewController!.dismiss(animated: true, completion:nil)
   }
 
 }

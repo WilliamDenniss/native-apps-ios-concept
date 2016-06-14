@@ -26,13 +26,13 @@ class MainViewController: UIViewController, SFSafariViewControllerDelegate, UITe
     urlField.text = kTestDomain
     logTextView.text = ""
 
-    appNumber.text = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as! String!
+    appNumber.text = Bundle.main().objectForInfoDictionaryKey("CFBundleName") as! String!
 
     logTextView.alwaysBounceVertical = true
-    logTextView.textContainer.lineBreakMode = NSLineBreakMode.ByCharWrapping
+    logTextView.textContainer.lineBreakMode = NSLineBreakMode.byCharWrapping
     
-    let appIdentifierPrefix: String = NSBundle.mainBundle().objectForInfoDictionaryKey("AppIdentifierPrefix") as! String
-    let bundleIdentifier: String = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleIdentifier") as! String
+    let appIdentifierPrefix: String = Bundle.main().objectForInfoDictionaryKey("AppIdentifierPrefix") as! String
+    let bundleIdentifier: String = Bundle.main().objectForInfoDictionaryKey("CFBundleIdentifier") as! String
 
     logMessage("App Started %@%@", appIdentifierPrefix, bundleIdentifier)
   }
@@ -43,79 +43,79 @@ class MainViewController: UIViewController, SFSafariViewControllerDelegate, UITe
     // Dispose of any resources that can be recreated.
   }
   
-  func userURL() -> NSURL
+  func userURL() -> URL
   {
     if (urlField.text == "")
     {
-      return NSURL(string: kTestDomain)!
+      return URL(string: kTestDomain)!
     }
     
-    let url = NSURL(string: urlField.text!)
+    let url = URL(string: urlField.text!)
     if (url == nil)
     {
       UIAlertView(title: "Invalid URL", message: "Could not parse URL", delegate: nil, cancelButtonTitle: "OK").show()
-      return NSURL(string: kTestDomain)!
+      return URL(string: kTestDomain)!
     }
     return url!
   }
   
   // procesess incoming Universal Links
-  func universalLinkReceived(url: NSURL)
+  func universalLinkReceived(_ url: URL)
   {
-    dismissViewControllerAnimated(true, completion: nil)
-    resultColor.backgroundColor = UIColor.greenColor()
-    logMessage("Universal link recieved: %@", url.absoluteString)
+    dismiss(animated: true, completion: nil)
+    resultColor.backgroundColor = UIColor.green()
+    logMessage("Universal link recieved: %@", url.absoluteString!)
   }
 
   // procesess incoming Universal Links
-  func customURIReceived(url: NSURL)
+  func customURIReceived(_ url: URL)
   {
-    dismissViewControllerAnimated(true, completion: nil)
-    resultColor.backgroundColor = UIColor.greenColor()
-    logMessage("Custom URI recieved: %@", url.absoluteString)
+    dismiss(animated: true, completion: nil)
+    resultColor.backgroundColor = UIColor.green()
+    logMessage("Custom URI recieved: %@", url.absoluteString!)
   }
 
   // SFSafariViewControllerDelegate
-  func safariViewControllerDidFinish(controller: SFSafariViewController)
+  func safariViewControllerDidFinish(_ controller: SFSafariViewController)
   {
-    dismissViewControllerAnimated(true, completion: nil)
+    dismiss(animated: true, completion: nil)
     logMessage("safariViewControllerDidFinish")
   }
 
   // opens the URL in a SFSafariViewController
-  @IBAction func oauth(sender: AnyObject)
+  @IBAction func oauth(_ sender: AnyObject)
   {
     urlField.resignFirstResponder()
     
     let url = userURL()
-    let vc = SFSafariViewController(URL: userURL(), entersReaderIfAvailable: false)
+    let vc = SFSafariViewController(url: userURL(), entersReaderIfAvailable: false)
     vc.delegate = self
-    presentViewController(vc, animated: true, completion: nil)
+    present(vc, animated: true, completion: nil)
     logMessage("Open SFSafariViewController with %@", url)
   }
   
   // clears the color indicator
-  @IBAction func onReset(sender: AnyObject)
+  @IBAction func onReset(_ sender: AnyObject)
   {
-    resultColor.backgroundColor = UIColor.orangeColor()
+    resultColor.backgroundColor = UIColor.orange()
   }
   
   // calls openURL on a Universal Link supported by this app
-  @IBAction func onOpenURL(sender: AnyObject) {
+  @IBAction func onOpenURL(_ sender: AnyObject) {
     urlField.resignFirstResponder()
     let url = userURL()
-    let result:Bool = UIApplication.sharedApplication().openURL(url)
+    let result:Bool = UIApplication.shared().openURL(url)
     logMessage("openURL on %@, result %@", url, result ? "true" : "false")
   }
   
-  @IBAction func shareLog(sender: AnyObject)
+  @IBAction func shareLog(_ sender: AnyObject)
   {
     let activityVC = UIActivityViewController(activityItems: [logTextView.text], applicationActivities: nil)
     activityVC.excludedActivityTypes = [UIActivityTypeAirDrop, UIActivityTypeAddToReadingList]
-    self.presentViewController(activityVC, animated: true, completion: nil)
+    self.present(activityVC, animated: true, completion: nil)
   }
   
-  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+  override func prepare(for segue: UIStoryboardSegue, sender: AnyObject!) {
     urlField.resignFirstResponder()
 
     let url = userURL()
@@ -132,16 +132,16 @@ class MainViewController: UIViewController, SFSafariViewControllerDelegate, UITe
 
   }
   
-  func logMessage(format: String, _ args: CVarArgType...)
+  func logMessage(_ format: String, _ args: CVarArg...)
   {
     // output to sys log
     NSLogv(format, getVaList(args))
 
     // prepend to output log
     let log = NSString(format:format, arguments:getVaList(args))
-    let dateFormatter = NSDateFormatter()
+    let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "hh:mm:ss"
-    logTextView.text = String(format:"%@%@%@: %@", logTextView.text, (logTextView.text != "") ? "\n" : "", dateFormatter.stringFromDate(NSDate()), log)
+    logTextView.text = String(format:"%@%@%@: %@", logTextView.text, (logTextView.text != "") ? "\n" : "", dateFormatter.string(from: Date()), log)
 
     //// scroll
     //let bottom:NSRange = NSMakeRange(logTextView.text.characters.count - 1, 1)
@@ -151,7 +151,7 @@ class MainViewController: UIViewController, SFSafariViewControllerDelegate, UITe
   
   /* UITextFieldDelegate methods */
   
-  func textFieldShouldReturn(_textField: UITextField) -> Bool
+  func textFieldShouldReturn(_ _textField: UITextField) -> Bool
   {
     _textField.resignFirstResponder()
     return false
