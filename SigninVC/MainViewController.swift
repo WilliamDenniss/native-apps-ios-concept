@@ -14,7 +14,6 @@ let kTestDomain:String = "https://www.oauth2.pw"
 class MainViewController: UIViewController, SFSafariViewControllerDelegate, UITextFieldDelegate {
 
   @IBOutlet weak var resultColor: UIView!
-  var hiddenvc: SFSafariViewController!
   @IBOutlet weak var appNumber: UILabel!
   @IBOutlet weak var urlField: UITextField!
   @IBOutlet weak var logTextView: UITextView!
@@ -87,8 +86,15 @@ class MainViewController: UIViewController, SFSafariViewControllerDelegate, UITe
   {
     urlField.resignFirstResponder()
     
+    let barColor = UIColor.blue()
+    let tintColor = UIColor.white()
+    
     let url = userURL()
-    let vc = SFSafariViewController(url: userURL(), entersReaderIfAvailable: false)
+    let config = SFSafariViewControllerConfiguration()
+    //config.preferredBarTintColor = barColor;
+    
+    let vc = SFSafariViewController(url: userURL(), configuration:config);
+    //vc.view.tintColor = tintColor
     vc.delegate = self
     present(vc, animated: true, completion: nil)
     logMessage("Open SFSafariViewController with %@", url)
